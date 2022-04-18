@@ -1,16 +1,20 @@
 package socialCreditBot
 
 import socialCreditBot.bot.SocialCreditBot
+import socialCreditBot.repository.UserRatingRepository
 
-import scala.concurrent.Await
 import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
+
 
 object SocialCreditBotApp extends App {
-  val bot = new SocialCreditBot("")
+  val db = new UserRatingRepository()
+  val bot = new SocialCreditBot("", db)
   val eol = bot.run()
   println("Press [ENTER] to shutdown the bot, it may take a few seconds...")
   scala.io.StdIn.readLine()
   bot.shutdown()
+  db.db.close()
   // Wait for the bot end-of-life
   Await.result(eol, Duration.Inf)
 }
