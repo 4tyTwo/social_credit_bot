@@ -19,14 +19,12 @@ class SocialCreditBot(val token: String, val db: UserRatingRepository) extends T
   override def receiveMessage(msg: Message): Future[Unit] = {
     Future {
       val chatId = msg.chat.id
-      println("chatID: " + chatId)
       msg.sticker.foreach {
         sticker => {
-          println("msg is a sticker")
           sticker.fileUniqueId match {
             case "AgADAgADf3BGHA" => msg.replyToMessage.foreach { m => m.from.foreach { u => db.changeRating(u.id, chatId, 20) } }
             case "AgADAwADf3BGHA" => msg.replyToMessage.foreach { m => m.from.foreach { u => db.changeRating(u.id, chatId, -20) } }
-            case _ => println("unknown sticker"); ()
+            case _ => ()
           }
         }
       }

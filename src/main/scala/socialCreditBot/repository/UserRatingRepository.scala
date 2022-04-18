@@ -27,12 +27,10 @@ class UserRatingRepository {
   def changeRating(userId: Long, chatId: Long, changeAmount: Int): Future[Int] =
     getRating(userId, chatId) flatMap {
       case Some(value) => {
-        println("Found rating for " + userId + " in " + chatId)
         val q = for { credit <- socialCredits if credit.userId === userId && credit.chatId === chatId} yield credit.rating
         db.run(q.update(value.rating + changeAmount))
       }
       case None => {
-        println("ChatId: " + chatId + " userId: " + userId + " had no record")
         db.run(socialCredits += UserSocialCredit(userId, chatId, changeAmount))
         getRating(userId, chatId).map {_.get.rating}
       }
