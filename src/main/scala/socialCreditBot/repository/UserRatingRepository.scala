@@ -5,12 +5,18 @@ import slick.lifted.Tag
 import slick.jdbc.PostgresProfile.api._
 import socialCreditBot.model.UserSocialCredit
 
+import java.net.URI
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.util.Properties
 
 class UserRatingRepository {
 
-  val db = Database.forConfig("pg")
+  val dbUri = new URI(sys.env("DATABASE_URL"))
+  val username: String = dbUri.getUserInfo.split(":")(0)
+  val password: String = dbUri.getUserInfo.split(":")(1)
+  val dbUrl: String = "jdbc:postgresql://" + dbUri.getHost + ':' + dbUri.getPort + dbUri.getPath + "?sslmode=require"
+  val db = Database.forURL(dbUrl, user= username, password = password, driver = "org.postgresql.Driver")
 
   private val socialCredits = TableQuery[UserSocialCredits]
 
