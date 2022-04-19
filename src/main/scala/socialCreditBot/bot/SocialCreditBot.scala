@@ -41,6 +41,13 @@ class SocialCreditBot(val token: String, val port: Int, val webhookUrl: String, 
     }
   }
 
+  onCommand("stat") { implicit  msg =>
+    Future {
+      val forUser = msg.replyToMessage.flatMap { _.from.map {_.id}}
+      forUser.foreach { userId => getUserRating(userId, msg.chat.id) foreach { r => reply(r.toString)} }
+    }
+  }
+
   def getUserRating(userId: Long, chatId: Long): Future[Int] =
     db.getRating(userId, chatId) map {
       case Some(value) => value.rating
