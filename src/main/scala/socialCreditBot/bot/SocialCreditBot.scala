@@ -36,15 +36,17 @@ class SocialCreditBot(val token: String, val port: Int, val webhookUrl: String, 
   onCommand("mystat") { implicit  msg =>
     Future {
       val userId = msg.from.flatMap {u => Some(u.id)}.getOrElse(0L)
-      getUserRating(userId, msg.chat.id) foreach { r => reply(r.toString)}
-      unit
+      getUserRating(userId, msg.chat.id) foreach { r => reply(r.toString, replyToMessageId = Some(msg.messageId))}
     }
   }
 
   onCommand("stat") { implicit  msg =>
     Future {
       val forUser = msg.replyToMessage.flatMap { _.from.map {_.id}}
-      forUser.foreach { userId => getUserRating(userId, msg.chat.id) foreach { r => reply(r.toString)} }
+      forUser.foreach
+        { userId =>
+            getUserRating(userId, msg.chat.id) foreach { r => reply(r.toString, replyToMessageId = Some(msg.messageId))}
+        }
     }
   }
 
