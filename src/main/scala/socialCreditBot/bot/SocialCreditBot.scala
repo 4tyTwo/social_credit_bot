@@ -2,7 +2,7 @@ package socialCreditBot.bot
 
 import com.bot4s.telegram.api.{AkkaTelegramBot, RequestHandler, Webhook}
 import com.bot4s.telegram.api.declarative.Commands
-import com.bot4s.telegram.clients.{AkkaHttpClient, FutureSttpClient}
+import com.bot4s.telegram.clients.AkkaHttpClient
 import com.bot4s.telegram.models.Message
 import socialCreditBot.repository.UserRatingRepository
 
