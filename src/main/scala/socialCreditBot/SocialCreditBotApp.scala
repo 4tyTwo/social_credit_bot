@@ -6,14 +6,14 @@ import socialCreditBot.repository.UserRatingRepository
 
 import java.net.InetSocketAddress
 import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Await
 
 
 object SocialCreditBotApp extends App {
   val db = new UserRatingRepository()
   val bot = new SocialCreditBot(sys.env("BOT_TOKEN"), db)
   val eol = bot.run()
-  println("Port: " + sys.env("PORT"))
+  println("Bot started")
   val server = HttpServer.create(new InetSocketAddress(sys.env("PORT").toInt), 0)
   server.createContext("/", new HttpHandler() {
     override def handle(exchange: HttpExchange): Unit = {

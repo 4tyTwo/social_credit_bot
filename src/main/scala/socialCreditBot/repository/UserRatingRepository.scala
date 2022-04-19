@@ -8,7 +8,6 @@ import socialCreditBot.model.UserSocialCredit
 import java.net.URI
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.Properties
 
 class UserRatingRepository {
 
@@ -16,7 +15,7 @@ class UserRatingRepository {
   val username: String = dbUri.getUserInfo.split(":")(0)
   val password: String = dbUri.getUserInfo.split(":")(1)
   val dbUrl: String = "jdbc:postgresql://" + dbUri.getHost + ':' + dbUri.getPort + dbUri.getPath + "?sslmode=require"
-  val db = Database.forURL(dbUrl, user= username, password = password, driver = "org.postgresql.Driver")
+  val db = Database.forURL(dbUrl, user= username, password = password, driver = "org.postgresql.Driver", keepAliveConnection = true)
 
   private val socialCredits = TableQuery[UserSocialCredits]
 
