@@ -1,20 +1,16 @@
 package socialCreditBot.bot
 
-import com.bot4s.telegram.api.RequestHandler
+import com.bot4s.telegram.api.{AkkaTelegramBot, RequestHandler, Webhook}
 import com.bot4s.telegram.api.declarative.Commands
-import com.bot4s.telegram.clients.FutureSttpClient
-import com.bot4s.telegram.future.{Polling, TelegramBot}
+import com.bot4s.telegram.clients.{AkkaHttpClient, FutureSttpClient}
 import com.bot4s.telegram.models.Message
 import socialCreditBot.repository.UserRatingRepository
-import sttp.client3.SttpBackend
-import sttp.client3.httpclient.HttpClientFutureBackend
 
 import scala.concurrent.Future
 
-class SocialCreditBot(val token: String, val db: UserRatingRepository) extends TelegramBot with Polling with Commands[Future] {
+class SocialCreditBot(val token: String, val port: Int, val webhookUrl: String, val db: UserRatingRepository) extends AkkaTelegramBot with Webhook with Commands[Future] {
 
-  implicit val backend: SttpBackend[Future, Any] = HttpClientFutureBackend()
-  override val client: RequestHandler[Future] = new FutureSttpClient(token)
+  override val client: RequestHandler[Future] = new AkkaHttpClient(token)
 
   override def receiveMessage(msg: Message): Future[Unit] = {
     Future {
@@ -44,4 +40,5 @@ class SocialCreditBot(val token: String, val db: UserRatingRepository) extends T
       case Some(value) => value.rating
       case None => 0
     }
+
 }

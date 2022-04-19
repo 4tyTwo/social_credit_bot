@@ -6,6 +6,7 @@ ThisBuild / organization     := "com.example"
 ThisBuild / organizationName := "example"
 
 libraryDependencies += "com.bot4s" %% "telegram-core" % "5.4.1"
+libraryDependencies += "com.bot4s" %% "telegram-akka" % "5.4.1"
 libraryDependencies += "com.softwaremill.sttp.client3" %% "httpclient-backend" % "3.5.1"
 libraryDependencies += "org.postgresql" % "postgresql" % "42.2.2"
 
