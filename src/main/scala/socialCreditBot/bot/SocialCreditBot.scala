@@ -17,10 +17,16 @@ class SocialCreditBot(val token: String, val port: Int, val webhookUrl: String, 
       val chatId = msg.chat.id
       msg.sticker.foreach {
         sticker => {
-          sticker.fileUniqueId match {
-            case "AgADAgADf3BGHA" => msg.replyToMessage.foreach { m => m.from.foreach { u => db.changeRating(u.id, chatId, 20) } }
-            case "AgADAwADf3BGHA" => msg.replyToMessage.foreach { m => m.from.foreach { u => db.changeRating(u.id, chatId, -20) } }
-            case _ => ()
+          val ratingChange = sticker.fileUniqueId match {
+            case "AgADAgADf3BGHA" => 20
+            case "AgADAwADf3BGHA" => -20
+          }
+          val fromId = msg.from.map { _.id}
+          val toId = msg.replyToMessage.flatMap { _.from.map { u => u.id } }
+          if (fromId.isDefined && toId.isDefined) {
+            if (fromId.get != toId.get) {
+              db.changeRating(toId.get, chatId, ratingChange)
+            }
           }
         }
       }
